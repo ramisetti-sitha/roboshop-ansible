@@ -1,0 +1,27 @@
+- name: create ec2-user and route53 records
+  hosts: local
+  connection: local
+  vars:
+   sg_id: sg-06d776063409f5709
+   ami_id: ami-0220d79f3f480ecf5
+   instances:
+    - mongodb
+    - catalogue
+   env: dev 
+   domain_name: devdaws.online
+   action: create
+  tasks:
+   - name: create ec2 instance
+     amazon.aws.ec2-instance:
+      instance_type: t3_micro
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
+      name: "{{ item }} - {{ env }}"
+      tags:
+       Project: "roboshop"
+       Component: "{{ item }}"
+       Environment: "{{ env }}"
+       Name: "{{ item }} - {{ env }}"
+     loop: "{{ instances }}"
+     register: ec2_output
+     when: action == "create"
