@@ -51,12 +51,12 @@
    - name: copy catalogue service
      ansible.builtin.copy:
       src: catalogue.service
-      path: /etc/systemd/system/catalogue.service
+      dest: /etc/systemd/system/catalogue.service
 
    - name: copy mongo repo
      ansible.builtin.copy:
       src: mongo.repo
-      path: /etc/yum.repos.d/mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
     
    - name: install mongodb client
      ansible.builtin.dnf:
