@@ -73,7 +73,7 @@
       overwrite: true
      loop: "{{ instances }}"
      when:
-      - item.item == "frontend"
+      - item == "frontend"
       - action_type == "destroy"
 
    - name: delete route53 records
