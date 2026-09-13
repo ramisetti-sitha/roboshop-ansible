@@ -9,7 +9,7 @@
     - catalogue
    env: dev 
    domain_name: devdaws.online
-   action: create
+   action_type: create
   tasks: ###CREATE
    - name: create ec2 instance
      amazon.aws.ec2_instance:
@@ -25,11 +25,11 @@
        wait: false
      loop: "{{ instances }}"
      register: ec2_output
-     when: action == "create"
+     when: action_type == "create"
    - name: print the output
      ansible.builtin.debug:
       msg: "{{ ec2_output }}"
-     when: action == "create"
+     when: action_type == "create"
    - name: create r53 records
      amazon.aws.route53:
       state: present
@@ -41,6 +41,7 @@
       wait: false
       overwrite: true
      loop: "{{ ec2_output.results }}"
+     when: action_type == "create"
    - name: create route53  frontend records
      amazon.aws.route53:
       state: present
@@ -54,7 +55,7 @@
      loop: "{{ ec2_output.results }}"
      when:
       - item.item == "frontend"
-      - action == "create"
+      - action_type == "create"
 
 
       ###DESTROY
@@ -71,7 +72,7 @@
      loop: "{{ instances }}"
      when:
       - item.item == "frontend"
-      - action == "destroy"
+      - action_type == "destroy"
    - name: delete route53 records
      amazon.aws.route53:
       state: absent
@@ -80,13 +81,13 @@
       type: A 
       ttl: 1
      loop: "{{ instances }}"
-     when: action == "destroy"
+     when: action_type == "destroy"
    - name: delete ec2_instance
      amazon.aws.ec2_instance:
       state: absent
       name: "{{ item }} - {{ env }}"
       wait: false
      loop: "{{ instances }}"    
-     when: action == "destroy"
+     when: action_type == "destroy"
      
    
