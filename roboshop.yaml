@@ -22,14 +22,16 @@
        Component: "{{ item }}"
        Environment: "{{ env }}"
        Name: "{{ item }} - {{ env }}"
-      wait: false
+      wait: true
      loop: "{{ instances }}"
      register: ec2_output
      when: action_type == "create"
+
    - name: print the output
      ansible.builtin.debug:
       msg: "{{ ec2_output }}"
      when: action_type == "create"
+
    - name: create r53 records
      amazon.aws.route53:
       state: present
@@ -42,6 +44,7 @@
       overwrite: true
      loop: "{{ ec2_output.results }}"
      when: action_type == "create"
+
    - name: create route53  frontend records
      amazon.aws.route53:
       state: present
@@ -59,20 +62,21 @@
 
 
       ###DESTROY
-  #  - name: delete route53  frontend records
-  #    amazon.aws.route53:
-  #     state: absent
-  #     zone: "{{ domain_name }}"
-  #     record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop-dev.daws88s.online
-  #     type: A 
-  #     ttl: 1
-  #     value: "{{ item.instances[0].public_ip_address }}"
-  #     wait: false
-  #     overwrite: true
-  #    loop: "{{ instances }}"
-  #    when:
-  #     - item.item == "frontend"
-  #     - action_type == "destroy"
+   - name: delete route53  frontend records
+     amazon.aws.route53:
+      state: absent
+      zone: "{{ domain_name }}"
+      record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop-dev.daws88s.online
+      type: A 
+      ttl: 1
+      value: "{{ item.instances[0].public_ip_address }}"
+      wait: false
+      overwrite: true
+     loop: "{{ instances }}"
+     when:
+      - item.item == "frontend"
+      - action_type == "destroy"
+
    - name: delete route53 records
      amazon.aws.route53:
       state: absent
@@ -82,6 +86,7 @@
       ttl: 1
      loop: "{{ instances }}"
      when: action_type == "destroy"
+
    - name: delete ec2_instance
      amazon.aws.ec2_instance:
       state: absent
