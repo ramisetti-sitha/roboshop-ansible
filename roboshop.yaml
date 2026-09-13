@@ -1,5 +1,5 @@
 - name: create ec2-user and route53 records
-  hosts: local
+  hosts: all
   connection: local
   vars:
    sg_id: sg-06d776063409f5709
@@ -24,4 +24,8 @@
        Name: "{{ item }} - {{ env }}"
      loop: "{{ instances }}"
      register: ec2_output
+     when: action == "create"
+   - name: print the output
+     ansible.builtin.debug:
+      msg: "{{ ec2_output }}"
      when: action == "create"
