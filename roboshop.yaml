@@ -22,7 +22,7 @@
        Component: "{{ item }}"
        Environment: "{{ env }}"
        Name: "{{ item }} - {{ env }}"
-       wait: false
+      wait: false
      loop: "{{ instances }}"
      register: ec2_output
      when: action_type == "create"
@@ -59,20 +59,20 @@
 
 
       ###DESTROY
-   - name: delete route53  frontend records
-     amazon.aws.route53:
-      state: present
-      zone: "{{ domain_name }}"
-      record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop-dev.daws88s.online
-      type: A 
-      ttl: 1
-      value: "{{ item.instances[0].public_ip_address }}"
-      wait: false
-      overwrite: true
-     loop: "{{ instances }}"
-     when:
-      - item.item == "frontend"
-      - action_type == "destroy"
+  #  - name: delete route53  frontend records
+  #    amazon.aws.route53:
+  #     state: absent
+  #     zone: "{{ domain_name }}"
+  #     record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop-dev.daws88s.online
+  #     type: A 
+  #     ttl: 1
+  #     value: "{{ item.instances[0].public_ip_address }}"
+  #     wait: false
+  #     overwrite: true
+  #    loop: "{{ instances }}"
+  #    when:
+  #     - item.item == "frontend"
+  #     - action_type == "destroy"
    - name: delete route53 records
      amazon.aws.route53:
       state: absent
