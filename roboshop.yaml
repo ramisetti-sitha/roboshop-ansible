@@ -12,7 +12,7 @@
    action: create
   tasks:
    - name: create ec2 instance
-     amazon.aws.ec2-instance:
+     amazon.aws.ec2_instance:
       instance_type: t3_micro
       security_group: "{{ sg_id }}"
       image_id: "{{ ami_id }}"
