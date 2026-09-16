@@ -8,7 +8,7 @@
     - mongodb
     - catalogue
    env: dev 
-   domain_name: devdaws.online
+   domain_name: devdaws.site
    action_type: create
   tasks: ###CREATE
    - name: create ec2 instance
