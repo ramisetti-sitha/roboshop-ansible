@@ -2,7 +2,7 @@
   hosts: all
   connection: local
   vars:
-   sg_id: sg-06d776063409f5709
+   sg_id: sg-07b728a2bc1308355
    ami_id: ami-0220d79f3f480ecf5
    instances:
     - mongodb
